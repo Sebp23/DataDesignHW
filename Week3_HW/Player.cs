@@ -20,8 +20,8 @@ namespace Week3_HW
             Name = "Player One";
             Random rand = new Random();
             HP = 200;
-            MP = rand.Next(50, 70);
-            AP = rand.Next(50, 70);
+            MP = rand.Next(20, 70);
+            AP = rand.Next(20, 70);
             Def = rand.Next(95, 110);
         }
     }

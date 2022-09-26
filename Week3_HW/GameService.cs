@@ -52,7 +52,7 @@ namespace Week3_HW
             DungeonRoom selectedRoom = DisplayRooms(this.RemainingDungeonRooms);
 
             //Check to see if the player survives the room
-            if (CheckIfPlayerSurvives(player, selectedRoom)) //if they survive
+            if (CheckIfPlayerSurvives(player, selectedRoom) && this.RemainingDungeonRooms.Count > 0) //if they survive
             {
                 selectedRoom.IsComplete = true;
                 this.RemainingDungeonRooms.Remove(selectedRoom); //Remove this room from the list of remaining rooms
@@ -69,9 +69,15 @@ namespace Week3_HW
                     //The game is not over yet
                     return false;
                 }
+                else if (this.RemainingDungeonRooms.Count <= 0)
+                {
+                    Console.WriteLine($"You survived against the {selectedRoom.Monster.Name}!");
+                    Console.WriteLine("You have survived every room. Well done!");
+                }
             }
             else
             {
+                Console.WriteLine("YOU DIED");
                 //Add the previously room that the player died in to the list of completed rooms
                 this.CompletedRooms.Add(selectedRoom);
 

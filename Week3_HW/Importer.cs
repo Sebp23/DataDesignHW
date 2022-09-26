@@ -40,6 +40,8 @@ namespace Week3_HW
                         continue;
                     }
                 }
+
+                sr.Close();
             }
 
             return monsters;

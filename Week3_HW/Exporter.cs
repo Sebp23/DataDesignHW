@@ -24,8 +24,9 @@ namespace Week3_HW
 
         private static void RunExport(DoublyList roomResult, string path)
         {
+            StreamWriter sw = new StreamWriter(path, true);
             //Write the result of the room
-            using (StreamWriter sw = new StreamWriter(path, true))
+            using (sw)
             {
                 sw.WriteLine(roomResult.Info);
             }
@@ -38,6 +39,7 @@ namespace Week3_HW
             }
             else
             {
+                sw.Close();
                 return;
             }
         }
