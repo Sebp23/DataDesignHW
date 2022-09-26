@@ -1,3 +1,0 @@
-Player won in room 1 against the Knight!
-Player won in room 3 against the Dwarf!
-Player died in room 2 against the Mage
