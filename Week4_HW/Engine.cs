@@ -64,10 +64,6 @@ namespace Week4_HW
                         isValid = false;
                         Errors.Add(new Error("File has invalid delimiters", $"ProcessFiles({_file.SourcePath})"));
                     }
-
-                    //dispose and close the StreamReader
-                    sr.Dispose();
-                    sr.Close();
                 }
 
                 //if the file is valid
@@ -94,10 +90,6 @@ namespace Week4_HW
                                 }
                             }
                         }
-
-                        //dispose and close the StreamWriter object
-                        sw.Dispose();
-                        sw.Close();
                     }
                 }
                 //if file is invalid, skip the file
