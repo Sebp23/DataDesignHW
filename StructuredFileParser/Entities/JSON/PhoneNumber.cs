@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,13 @@ namespace StructuredFileParser.Entities.JSON
     /// </summary>
     internal class PhoneNumber
     {
-        [JsonPropertyName("type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
-        [JsonPropertyName("number")]
+        [JsonProperty("number")]
         public string Number { get; set; }
 
-        [JsonPropertyName("canContact")]
+        [JsonProperty("canContact")]
         public bool CanContact { get; set; }
     }
 }

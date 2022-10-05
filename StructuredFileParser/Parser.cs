@@ -17,7 +17,7 @@ namespace StructuredFileParser
         public List<Error> Errors { get; set; }
 
         //Constructor
-        public Parser(List<string> pathList)
+        public Parser()
         {
             //List of the paths for each file that needs to be parsed
             SourcePaths = new List<string>();
@@ -104,24 +104,24 @@ namespace StructuredFileParser
                 else
                 {
                     //Create a new error using Error class and then add it to the Parser's list of errors
-                    Errors.Add(new Error($"File ({path.Substring(path.IndexOf("Files"))}) has invalid file extension", "GetAllFiles()"));
+                    Error.ErrorList.Add(new Error($"File '{path.Substring(path.IndexOf("Files"))}' has invalid file extension", "Parser.GetAllFiles()"));
                 }
             }
 
-            if (Errors.Count > 0)
-            {
-                Console.WriteLine("Parser encountered errors:");
+            //if (Errors.Count > 0)
+            //{
+            //    Console.WriteLine("Parser encountered errors:");
 
-                //Print all errors to the console
-                foreach (var error in Errors)
-                {
-                    Console.WriteLine($"{error.Message}: {error.MethodSource}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Parser encountered no errors!");
-            }
+            //    //Print all errors to the console
+            //    foreach (var error in Errors)
+            //    {
+            //        Console.WriteLine($"{error.Message}: {error.MethodSource}");
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Parser encountered no errors!");
+            //}
             
             return files;
         }

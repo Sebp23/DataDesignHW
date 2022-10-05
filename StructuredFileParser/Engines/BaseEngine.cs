@@ -36,46 +36,54 @@ namespace StructuredFileParser.Engines
                 File.Delete(outPath);
             }
 
-            //Read the file using the pre-determined delimiter
-            using (StreamReader sr = new StreamReader(file.SourcePath))
+            try
             {
-                //if the file has the valid delimiters
-                if (file.Delimiter == Constants.FileDelimiters.CSV || file.Delimiter == Constants.FileDelimiters.Pipe)
+                //Read the file using the pre-determined delimiter
+                using (StreamReader sr = new StreamReader(file.SourcePath))
                 {
-                    //get each line of the file
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
+                    //if the file has the valid delimiters
+                    if (file.Delimiter == Constants.FileDelimiters.CSV || file.Delimiter == Constants.FileDelimiters.Pipe)
                     {
-                        //get a string array by splitting the line based on the pre-determined delimiter
-                        var lineInfo = line.Split(file.Delimiter);
-                        //add the string array to the list of lines
-                        lines.Add(lineInfo);
-                    }
-                }
-            }
-
-            using (StreamWriter sw = new StreamWriter(outPath, true))
-            {
-                //for every generated string array, write out the line number and each separated value found on the line
-                foreach (var lineInfo in lines)
-                {
-                    sw.Write($"Line#{lines.IndexOf(lineInfo) + 1}: ");
-                    for (int i = 0; i <= lineInfo.Length - 1; i++)
-                    {
-                        sw.Write($"Field#{i + 1}={lineInfo[i]}");
-
-                        //check to see if this is the last value or not
-                        if (i < lineInfo.Length - 1)
+                        //get each line of the file
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
                         {
-                            sw.Write(" ==> ");
-                        }
-                        else if (i == lineInfo.Length - 1)
-                        {
-                            sw.Write(Environment.NewLine);
+                            //get a string array by splitting the line based on the pre-determined delimiter
+                            var lineInfo = line.Split(file.Delimiter);
+                            //add the string array to the list of lines
+                            lines.Add(lineInfo);
                         }
                     }
                 }
+
+                using (StreamWriter sw = new StreamWriter(outPath, true))
+                {
+                    //for every generated string array, write out the line number and each separated value found on the line
+                    foreach (var lineInfo in lines)
+                    {
+                        sw.Write($"Line#{lines.IndexOf(lineInfo) + 1}: ");
+                        for (int i = 0; i <= lineInfo.Length - 1; i++)
+                        {
+                            sw.Write($"Field#{i + 1}={lineInfo[i]}");
+
+                            //check to see if this is the last value or not
+                            if (i < lineInfo.Length - 1)
+                            {
+                                sw.Write(" ==> ");
+                            }
+                            else if (i == lineInfo.Length - 1)
+                            {
+                                sw.Write(Environment.NewLine);
+                            }
+                        }
+                    }
+                }
             }
+            catch (Exception e)
+            {
+                Error.ErrorList.Add(new Error(e.Message, "BaseEngine.ProcessFiles()"));
+            }
+            
         }
     }
 }

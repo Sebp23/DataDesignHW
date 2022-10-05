@@ -28,23 +28,30 @@ namespace StructuredFileParser.Engines
                 File.Delete(outPath);
             }
 
-            //Open the source file
-            using (var fs = File.Open(file.SourcePath, FileMode.Open))
+            try
             {
-                //create the serializer object which acts as a middle man (like an API). Let it know that we are deserializing into a Market type object
-                XmlSerializer serializer = new XmlSerializer(typeof(Market));
-
-                //Create the list of market items that are taken and deserialized with the serializer object
-                var marketInventory = (Market)serializer?.Deserialize(fs);
-
-                //Write to the output file
-                using (StreamWriter sw = new StreamWriter(outPath, true))
+                //Open the source file
+                using (var fs = File.Open(file.SourcePath, FileMode.Open))
                 {
-                    for (int i = 0; i <= marketInventory.Items.Count - 1; i++)
+                    //create the serializer object which acts as a middle man (like an API). Let it know that we are deserializing into a Market type object
+                    XmlSerializer serializer = new XmlSerializer(typeof(Market));
+
+                    //Create the list of market items that are taken and deserialized with the serializer object
+                    var marketInventory = (Market)serializer?.Deserialize(fs);
+
+                    //Write to the output file
+                    using (StreamWriter sw = new StreamWriter(outPath, true))
                     {
-                        sw.WriteLine($"Market Item #{i + 1}: {marketInventory.Items[i].Name} | {marketInventory.Items[i].Price}/{marketInventory.Items[i].UnitOfMeasurement}");
+                        for (int i = 0; i <= marketInventory.Items.Count - 1; i++)
+                        {
+                            sw.WriteLine($"Market Item #{i + 1}: {marketInventory.Items[i].Name} | {marketInventory.Items[i].Price}/{marketInventory.Items[i].UnitOfMeasurement}");
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Error.ErrorList.Add(new Error(e.Message, "XmlEngine.ProcessFiles()"));
             }
         }
     }

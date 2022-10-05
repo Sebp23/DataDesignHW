@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,16 +13,16 @@ namespace StructuredFileParser.Entities.JSON
     /// </summary>
     internal class Address
     {
-        [JsonPropertyName("streetAddress")]
+        [JsonProperty("streetAddress")]
         public string StreetAddress { get; set; }
 
-        [JsonPropertyName("city")]
+        [JsonProperty("city")]
         public string City { get; set; }
 
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public string State { get; set; }
 
-        [JsonPropertyName("postalCode")]
+        [JsonProperty("postalCode")]
         public string PostalCode { get; set; }
     }
 }
