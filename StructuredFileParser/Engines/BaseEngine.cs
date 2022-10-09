@@ -30,14 +30,14 @@ namespace StructuredFileParser.Engines
             //the path that the generated file will be saved in
             string outPath = GetOutputPath(file.SourcePath);
 
-            if (File.Exists(outPath))
-            {
-                //delete the file if it already exists
-                File.Delete(outPath);
-            }
-
             try
             {
+                if (File.Exists(outPath))
+                {
+                    //delete the file if it already exists
+                    File.Delete(outPath);
+                }
+
                 //Read the file using the pre-determined delimiter
                 using (StreamReader sr = new StreamReader(file.SourcePath))
                 {

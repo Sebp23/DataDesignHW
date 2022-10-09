@@ -22,14 +22,14 @@ namespace StructuredFileParser.Engines
             //Get the output relative path
             string outPath = GetOutputPath(file.SourcePath);
 
-            if (File.Exists(outPath))
-            {
-                //delete the file if it already exists
-                File.Delete(outPath);
-            }
-
             try
             {
+                if (File.Exists(outPath))
+                {
+                    //delete the file if it already exists
+                    File.Delete(outPath);
+                }
+
                 //Open the source file
                 using (var fs = File.Open(file.SourcePath, FileMode.Open))
                 {
