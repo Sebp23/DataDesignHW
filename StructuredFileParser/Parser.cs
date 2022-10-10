@@ -25,8 +25,6 @@ namespace StructuredFileParser
 
             //list of errors for parser
             Errors = new List<Error>();
-
-            SendFilesToEngine();
         }
 
         /// <summary>
