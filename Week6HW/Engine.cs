@@ -269,6 +269,8 @@ namespace Week6HW
                             //Add it to the list of records
                             records.Add(record);
                         }
+
+                        tableReader.Close();
                     }
 
                     conn.Close();
