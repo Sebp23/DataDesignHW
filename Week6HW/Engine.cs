@@ -90,10 +90,17 @@ namespace Week6HW
             catch (IOException e)
             {
                 Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
+            }
+            catch (NullReferenceException e)
+            {
+                Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
+                return;
             }
             catch (Exception e)
             {
                 Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
+                return;
             }
 
         }
@@ -124,11 +131,18 @@ namespace Week6HW
             }
             catch (IOException e)
             {
-                Error.ErrorList.Add(new Error($"Could not update locations in {TableName}", "UpdateLocation()"));
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
+            }
+            catch (InvalidCastException e)
+            {
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
             }
             catch (Exception e)
             {
-                Error.ErrorList.Add(new Error(e.Message, "UpdateLocation()"));
+                Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
+                return;
             }
         }
 
@@ -158,11 +172,18 @@ namespace Week6HW
             }
             catch (IOException e)
             {
-                Error.ErrorList.Add(new Error($"Could not delete old dates from {TableName}", "DeleteExpired()"));
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
+            }
+            catch (InvalidCastException e)
+            {
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
             }
             catch (Exception e)
             {
-                Error.ErrorList.Add(new Error(e.Message, "DeleteExpired()"));
+                Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
+                return;
             }
         }
 
@@ -192,11 +213,18 @@ namespace Week6HW
             }
             catch (IOException e)
             {
-                Error.ErrorList.Add(new Error($"Could not increase prices by {increaseNum} in {TableName}", "IncreasePrice()"));
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
+            }
+            catch (InvalidCastException e)
+            {
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
             }
             catch (Exception e)
             {
-                Error.ErrorList.Add(new Error(e.Message, "IncreasePrice()"));
+                Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
+                return;
             }
         }
 
@@ -261,11 +289,18 @@ namespace Week6HW
             }
             catch (IOException e)
             {
-                Error.ErrorList.Add(new Error("Could not insert data into Produce-Table", "InsertIntoTable()"));
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
+            }
+            catch (InvalidCastException e)
+            {
+                Error.ErrorList.Add(new Error($"Could not insert data into {TableName}", "InsertIntoTable()"));
+                return;
             }
             catch (Exception e)
             {
                 Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
+                return;
             }
         }
     }
