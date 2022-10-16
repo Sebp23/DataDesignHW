@@ -74,7 +74,7 @@ namespace Week6HW
                     {
                         //the SQL command that will be executed. Insert each string in the row into the SQL table as the proper data type
                         string inLineSql = $@"INSERT INTO {TableName} ([Name], [Location], [Price], [UoM], [SellBy]) " +
-                                               $"VALUES ('{row[0]}', '{row[1]}', {SqlMoney.Parse(row[2])}, '{row[3]}', '{row[4]}')";
+                                               $@"VALUES ('{row[0]}', '{row[1]}', {SqlMoney.Parse(row[2])}, '{row[3]}', '{row[4]}')";
 
                         //Execute the SQL query
                         using (var command = new SqlCommand(inLineSql, conn))
@@ -112,7 +112,7 @@ namespace Week6HW
                     //This will replace every instance of 'F' in the Location column with 'Z'
                     //REPLACE function found from: https://www.sqltutorial.org/sql-string-functions/sql-replace/
                     string inLineSql = $@"UPDATE {TableName}" +
-                                       "SET Location = REPLACE(Location, 'F', 'Z')";
+                                       @"SET Location = REPLACE(Location, 'F', 'Z')";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
@@ -146,7 +146,7 @@ namespace Week6HW
                     //Compare the SellBy value in each row with the current date, and delete it if it is less than the current date (older)
                     //GETDATE found from https://www.geeksforgeeks.org/sql-query-to-compare-results-with-todays-date/
                     string inLineSql = $@"DELETE FROM {TableName}" +
-                                        "WHERE SellBy < GETDATE()";
+                                        @"WHERE SellBy < GETDATE()";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
@@ -180,7 +180,7 @@ namespace Week6HW
 
                     //Increase the price value in every row by the parameter value
                     string inLineSql = $@"UPDATE {TableName}" +
-                                       $"SET Price = Price + {increaseNum}";
+                                       $@"SET Price = Price + {increaseNum}";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
