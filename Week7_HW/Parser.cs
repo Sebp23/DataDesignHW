@@ -26,10 +26,10 @@ namespace Week7_HW
         /// </summary>
         /// <param name="fileName">name of the file that it is reading</param>
         /// <returns>the SqlFile object</returns>
-        public CharacterFile PrepareFileForEngine(string fileName)
+        public CharacterFile PrepareFileForEngine()
         {
             //Get the relative path of the file
-            var fileToParse = $@"{RelativePath}\{fileName}";
+            var fileToParse = Directory.GetFiles(RelativePath).Where(f => f.Contains(".csv")).ToList()[0];
 
             //Make sure it has the proper extension (only .csv in this case)
             if (fileToParse.Substring(fileToParse.IndexOf('.')) == ".csv")
@@ -41,7 +41,7 @@ namespace Week7_HW
             }
             else
             {
-                Error.ErrorList.Add(new Error($"{fileName} is invalid and cannot be parsed", "PrepareFileForEngine()"));
+                Error.ErrorList.Add(new Error($"{fileToParse} is invalid and cannot be parsed", "PrepareFileForEngine()"));
                 return null;
             }
         }

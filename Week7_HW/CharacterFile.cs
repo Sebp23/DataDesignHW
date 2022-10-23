@@ -10,7 +10,6 @@ namespace Week7_HW
     {
         public string Delimiter { get; set; }
         public string SourcePath { get; set; }
-        public string FileName { get; set; }
 
         public CharacterFile(string sourcePath)
         {
