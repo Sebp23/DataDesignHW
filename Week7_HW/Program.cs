@@ -4,7 +4,7 @@
 
 //Make the parser and the engine with the requested table names
 Parser parser = new Parser();
-Engine sqlEngine = new Engine("[dbo].[Character]", "[dbo].[Character_Traits]");
+Engine sqlEngine = new Engine("[dbo].[Character]", "[dbo].[Character_Types]", "[dbo].[Character_Maps]", "[dbo].[Character_Info]");
 
 //Get the details of the file that we want to put through the engine (delimiter, path, name)
 var fileToProcess = parser.PrepareFileForEngine();
