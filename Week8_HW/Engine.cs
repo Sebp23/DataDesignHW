@@ -400,12 +400,9 @@ namespace Week8_HW
         public void FindConcatenatedBinaryValues()
         {
             //A list for recording records from appropriate view
-            List<string[]> recordsBeforeConcat = new List<string[]>();
+            List<string> records = new List<string>();
 
-            //List that will contain strings with concatenated bool values (used for file export)
-            List<string> recordsAfterConcat = new List<string>();
-
-            string columNames = "ID,Character,Concatenated_Bools";
+            string columNames = "ID,Character,Info_Binary";
 
             try
             {
@@ -425,10 +422,9 @@ namespace Week8_HW
                         while (tableReader.Read())
                         {
                             //Write the row, checking to see if the value is null. If it is null, replace with "NULL" for the file
-                            var recordString = $"{CheckIfNull(tableReader.GetValue(0))},{CheckIfNull(tableReader.GetValue(1))},{CheckIfNull(tableReader.GetValue(2))},{CheckIfNull(tableReader.GetValue(3))},{CheckIfNull(tableReader.GetValue(4))}";
-                            var record = recordString.Split(',');
+                            var record = $"{CheckIfNull(tableReader.GetValue(0))}|{CheckIfNull(tableReader.GetValue(1))}|{CheckIfNull(tableReader.GetValue(2))}";
                             //Add to the list of records
-                            recordsBeforeConcat.Add(record);
+                            records.Add(record);
                         }
 
                         //close the table reader
@@ -438,45 +434,7 @@ namespace Week8_HW
                     conn.Close();
                 }
 
-                using (SqlConnection conn = new SqlConnection(SqlConString))
-                {
-                    conn.Open();
-
-                    //For using the Sproc that will use the function that concatenates the binary values
-                    string sprocName = @"[dbo].[spFindConcatenatedBinaryValue]";
-
-                    //For every record that was recorded from the view above
-                    foreach (var record in recordsBeforeConcat)
-                    {
-                        using (var command = new SqlCommand(sprocName, conn))
-                        {
-                            command.CommandType = CommandType.StoredProcedure;
-
-                            //Using the direction property to differentiate between the input parameters and the output (returned) values
-                            //I referenced ColorMeRGB code to help me remember this syntax
-                            command.Parameters.AddWithValue("@OriginalCharacter", (record[2] != "NULL" ? (SqlBoolean)Boolean.Parse(record[2]) : 0)).Direction = ParameterDirection.Input;
-                            command.Parameters.AddWithValue("@SwordFighter", (record[3] != "NULL" ? (SqlBoolean)Boolean.Parse(record[3]) : 0)).Direction = ParameterDirection.Input;
-                            command.Parameters.AddWithValue("@MagicUser", (record[4] != "NULL" ? (SqlBoolean)Boolean.Parse(record[4]) : 0)).Direction = ParameterDirection.Input;
-                            command.Parameters.Add("@ConcatenatedString", SqlDbType.NVarChar, 50).Direction = ParameterDirection.Output;
-
-                            //Execute the Sproc
-                            command.ExecuteNonQuery();
-                            
-                            //store the output value of the sproc
-                            var spResult = (string)command.Parameters["@ConcatenatedString"].Value;
-
-                            //New record with the ID, Character, Concatenated Binary Value
-                            string recordAfter = $"{record[0]} | {record[1]} | {spResult}";
-
-                            recordsAfterConcat.Add(recordAfter);
-                        }
-                    }
-                    
-
-                    conn.Close();
-                }
-
-                ExportToFile(recordsAfterConcat, $"ConcatenatedInfoReport.txt", columNames);
+                ExportToFile(records, $"ConcatenatedInfoReport.txt", columNames);
             }
             catch (IOException e)
             {
