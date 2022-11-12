@@ -140,6 +140,7 @@ namespace Week10_HW_Console
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                     //invoke the end point, sending the serialized monster in the proper format to be recieved by the end point
+                    //Got help from: https://makolyte.com/csharp-get-and-send-json-with-httpclient/
                     var response = client.PostAsync($"update-monster/{id}", new StringContent(content, Encoding.UTF8, "application/json")).Result;
 
                     //Add to the log the result
