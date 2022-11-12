@@ -1,0 +1,17 @@
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\bin\Debug\net6.0\Week10_HW_Console.exe
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\bin\Debug\net6.0\Week10_HW_Console.deps.json
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\bin\Debug\net6.0\Week10_HW_Console.runtimeconfig.json
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\bin\Debug\net6.0\Week10_HW_Console.dll
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\bin\Debug\net6.0\Week10_HW_Console.pdb
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.csproj.AssemblyReference.cache
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.AssemblyInfoInputs.cache
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.AssemblyInfo.cs
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.csproj.CoreCompileInputs.cache
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.csproj.CopyComplete
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.dll
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\refint\Week10_HW_Console.dll
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.pdb
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\Week10_HW_Console.genruntimeconfig.cache
+C:\Users\sebpe\OneDrive - Columbia College Chicago\2022-2023\Fall\Data Design\Week 10\HW\Week10_HW_Console\obj\Debug\net6.0\ref\Week10_HW_Console.dll
