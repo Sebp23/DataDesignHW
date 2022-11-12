@@ -4,7 +4,7 @@ Services service = new Services();
 
 service.GetAllMonsters();
 service.GetMonster(500);
-service.UpdateMonster(501, "Märta");
+service.UpdateMonster(501, name: "Märta");
 service.DeleteMonster(500);
 
 

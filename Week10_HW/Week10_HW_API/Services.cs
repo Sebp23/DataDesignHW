@@ -134,7 +134,7 @@ namespace Week10_HW_API
         /// <param name="id"></param>
         /// <param name="monster"></param>
         /// <param name="SqlConString"></param>
-        public void UpdateMonsterByID(int id, MonsterModel monster)
+        public void UpdateMonsterByID(MonsterModel monster)
         {
             using (SqlConnection conn = new SqlConnection(SqlConString))
             {
@@ -149,7 +149,7 @@ namespace Week10_HW_API
                     command.CommandType = CommandType.StoredProcedure;
 
                     //Populate the parameters. The Sproc has functionality to make sure that null records are not applied for the update
-                    command.Parameters.AddWithValue("@ID", id);
+                    command.Parameters.AddWithValue("@ID", monster.ID);
                     command.Parameters.AddWithValue("@Name", monster.Name);
                     command.Parameters.AddWithValue("@Type", monster.Type);
                     command.Parameters.AddWithValue("@HP", monster.HP);

@@ -34,12 +34,12 @@ namespace Week10_HW_API.Controllers
         }
 
         // POST api/<MonsterController>
-        [HttpPost("update-monster/{id}")]
-        public void Post(int id, [FromBody] MonsterModel model)
+        [HttpPost("update-monster")]
+        public void Post([FromBody] MonsterModel model)
         {
             service.PrepareDBConnection();
 
-            service.UpdateMonsterByID(id, model);
+            service.UpdateMonsterByID(model);
         }
 
         // DELETE api/<MonsterController>/5
