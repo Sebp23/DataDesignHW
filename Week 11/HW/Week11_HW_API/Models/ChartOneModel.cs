@@ -1,13 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Week11_HW_API.Models
 {
     public class ChartOneModel
     {
-        [JsonPropertyName("Location")]
+        [JsonProperty("Location")]
         public string Location { get; set; }
 
-        [JsonPropertyName("Monster_Count")]
+        [JsonProperty("Monster_Count")]
         public int Monster_Count { get; set; }
     }
 }
