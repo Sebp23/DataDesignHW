@@ -61,8 +61,8 @@ namespace Week11_HW_API
                     {
                         //Map the recieved data to the ChartOneModel and add to the list of records
                         ChartOneModel model = new ChartOneModel();
-                        model.State = (string)tableReader["Location"];
-                        model.Count = (int)tableReader["Monster_Count"];
+                        model.Location = (string)tableReader["Location"];
+                        model.Monster_Count = (int)tableReader["Monster_Count"];
 
                         dataList.Add(model);
                     }
