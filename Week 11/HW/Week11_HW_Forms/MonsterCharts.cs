@@ -124,7 +124,7 @@ namespace Week11_HW_Forms
 
                 //new series for data
                 var chartSeries2 = chartTwo.Series.Add("Number of Monsters");
-                chartSeries2.ChartType = SeriesChartType.Column;
+                chartSeries2.ChartType = SeriesChartType.Pie;
                 chartSeries2.IsValueShownAsLabel = true;
                 chartSeries2.BorderWidth = 3;
 
