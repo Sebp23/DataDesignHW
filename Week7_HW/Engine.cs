@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
@@ -13,19 +14,9 @@ namespace Week7_HW
     {
         SqlConnectionStringBuilder SqlConBuilder { get; set; }
         string SqlConString { get; set; }
-        string CharacterTable { get; set; }
-        string TypeTable { get; set; }
-        string MapTable { get; set; }
-        string InfoTable { get; set; }
 
-        public Engine(string characterTable, string typeTable, string mapTable, string infoTable)
+        public Engine()
         {
-            //Get the name of the table
-            CharacterTable = characterTable;
-            TypeTable = typeTable;
-            MapTable = mapTable;
-            InfoTable = infoTable;
-
             //Get all the server connection info when the engine is instantiated
             SqlConBuilder = new SqlConnectionStringBuilder();
 
@@ -43,6 +34,7 @@ namespace Week7_HW
         /// Get all of the rows and insert the Character name and whether they're original or not into the parent table
         /// Get the id of the most recent entry so it can entered into the child table
         /// add the remaining fields into the child table
+        /// Source for checking duplicates in sprocs: https://www.aspsnippets.com/questions/149003/How-to-avoid-duplicate-record-inserts-in-SQL-Server-using-C-and-ASPNet/
         /// </summary>
         /// <param name="file"></param>
         public void InsertIntoTables(CharacterFile file)
@@ -66,29 +58,6 @@ namespace Week7_HW
                             {
                                 //split the row by the delimiter and add the row to the list of rows
                                 var rowInfo = row.Split(file.Delimiter);
-                                foreach (var value in rowInfo)
-                                {
-                                    //If the field has an apostrophe, make sure the field uses proper SQL syntax to translate for the DB
-                                    if (value.Contains("'"))
-                                    {
-                                        string trimmed = value.Trim();
-                                        string replace = trimmed.Replace(trimmed.Substring(trimmed.IndexOf(@"'")), @"''s");
-
-                                        //Add the string syntax around the field
-                                        string apostrophe = string.Format($"'{replace}'").Trim();
-                                        rowInfo[Array.IndexOf(rowInfo, value)] = apostrophe;
-                                    }
-                                    //No other edits other than adding SQL string syntax around the field
-                                    else
-                                    {
-                                        if (value != String.Empty)
-                                        {
-                                            string trimmed = value.Trim();
-                                            string apostrophe = string.Format($"'{trimmed}'");
-                                            rowInfo[Array.IndexOf(rowInfo, value)] = apostrophe;
-                                        }
-                                    }
-                                }
                                 //Add to list of rows
                                 rows.Add(rowInfo);
                             }
@@ -121,81 +90,66 @@ namespace Week7_HW
                         //First make sure that the "Type" field is not empty
                         if (row[1] != String.Empty)
                         {
-                            //To avoid duplicates, check to see if this type has been inserted before
-                            if (!typesInserted.Contains(row[1]))
+                            //Insert the type with sproc
+                            inLineSql = $@"[dbo].[spInsertIntoCharTypes]";
+                            using (var command = new SqlCommand(inLineSql, conn))
                             {
-                                inLineSql = $@"INSERT INTO {TypeTable} ([Type]) VALUES ({row[1]})";
-                                using (var command = new SqlCommand(inLineSql, conn))
-                                {
-                                    var query = command.ExecuteNonQuery();
-                                }
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.AddWithValue("@Type", row[1]);
+                                command.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.Output;
 
-                                //Get the id of the inserted type
-                                typeID = GetRecordId(TypeTable, conn);
-                                typesInserted.Add(row[1]);
-                            }
-                            else
-                            {
-                                //If it has been inserted before, then all we need to do is get the id
-                                inLineSql = $@"SELECT ID FROM {TypeTable} WHERE {TypeTable}.Type = {row[1]}";
-                                using (var command = new SqlCommand(inLineSql, conn))
-                                {
-                                    var reader = command.ExecuteReader();
+                                command.ExecuteNonQuery();
 
-                                    while (reader.Read())
-                                    {
-                                        typeID = (int)reader.GetValue(0);
-                                    }
-
-                                    reader.Close();
-                                }
+                                //return the id
+                                typeID = (int)command.Parameters["@Return"].Value;
                             }
                         }
 
                         //Same as above but with maps to avoid duplicates
                         if (row[2] != String.Empty)
                         {
-                            if (!mapsInserted.Contains(row[2]))
+                            //insert the map with sproc
+                            inLineSql = $@"[dbo].[spInsertIntoCharMaps]";
+                            using (var command = new SqlCommand(inLineSql, conn))
                             {
-                                inLineSql = $@"INSERT INTO {MapTable} ([Map_Location]) VALUES ({row[2]})";
-                                using (var command = new SqlCommand(inLineSql, conn))
-                                {
-                                    var query = command.ExecuteNonQuery();
-                                }
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.AddWithValue("@Map", row[2]).Direction = ParameterDirection.Input;
+                                command.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.Output;
 
-                                mapID = GetRecordId(MapTable, conn);
-                                mapsInserted.Add(row[2]);
-                            }
-                            else
-                            {
-                                inLineSql = $@"SELECT ID FROM {MapTable} WHERE {MapTable}.Map_Location = {row[2]}";
-                                using (var command = new SqlCommand(inLineSql, conn))
-                                {
-                                    var reader = command.ExecuteReader();
+                                command.ExecuteNonQuery();
 
-                                    while (reader.Read())
-                                    {
-                                        mapID = (int)reader.GetValue(0);
-                                    }
-
-                                    reader.Close();
-                                }
+                                //return the id
+                                mapID = (int)command.Parameters["@Return"].Value;
                             }
                         }
 
-                        //Insert into the Info table
-                        inLineSql = $@"INSERT INTO {InfoTable} ([Original_Character], [Sword_Fighter], [Magic_User]) VALUES ({row[3]}, {(row[4] != String.Empty ? row[4] : "NULL")}, {(row[5] != String.Empty ? row[5] : "NULL")})";
+                        //insert info with sproc
+                        inLineSql = $@"[dbo].[spInsertIntoCharInfo]";
                         using (var command = new SqlCommand(inLineSql, conn))
                         {
-                            var query = command.ExecuteNonQuery();
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@OriginalChar", row[3]).Direction = ParameterDirection.Input;
+                            command.Parameters.AddWithValue("@SwordFighter", row[4] != String.Empty ? row[4] : DBNull.Value).Direction = ParameterDirection.Input;
+                            command.Parameters.AddWithValue("@MagicUser", row[5] != String.Empty ? row[5] : DBNull.Value).Direction = ParameterDirection.Input;
+                            command.Parameters.Add("@Return", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                            command.ExecuteNonQuery();
+
+                            //return the id
+                            infoID = (int)command.Parameters["@Return"].Value;
                         }
-                        infoID = GetRecordId(InfoTable, conn);
 
                         //Insert into the character table using all the IDs we found from previous insertions
-                        inLineSql = $@"INSERT INTO {CharacterTable} ([Character], [TypeID], [MapID], [InfoID]) VALUES ({row[0]}, {(typeID != null ? typeID : "NULL")}, {(mapID != null ? mapID : "NULL")}, {infoID})";
+                        inLineSql = $@"[dbo].[spInsertIntoChar]";
                         using (var command = new SqlCommand(inLineSql, conn))
                         {
-                            var query = command.ExecuteNonQuery();
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@Char", row[0]);
+                            command.Parameters.AddWithValue("@TypeID", typeID != null ? typeID : DBNull.Value);
+                            command.Parameters.AddWithValue("@MapID", mapID != null ? mapID : DBNull.Value);
+                            command.Parameters.AddWithValue("@InfoID", infoID != null ? infoID : DBNull.Value);
+
+                            command.ExecuteNonQuery();
                         }
                     }
 
@@ -204,7 +158,7 @@ namespace Week7_HW
             }
             catch (IOException e)
             {
-                Error.ErrorList.Add(new Error($"Could not insert data into {CharacterTable}", "InsertIntoTable()"));
+                Error.ErrorList.Add(new Error($"Could not insert data into Character tables", "InsertIntoTable()"));
                 return;
             }
             catch (NullReferenceException e)
@@ -217,33 +171,6 @@ namespace Week7_HW
                 Error.ErrorList.Add(new Error(e.Message, "InsertIntoTable()"));
                 return;
             }
-        }
-
-        /// <summary>
-        /// Get the ID of the requested record
-        /// </summary>
-        /// <param name="tableName">Table in which the record is located</param>
-        /// <param name="conn">Connection to use for SQL command</param>
-        /// <returns></returns>
-        private int? GetRecordId(string tableName, SqlConnection conn)
-        {
-            int? idToReturn = null;
-
-            string inLineSqlGetID = $@"SELECT TOP 1 ID FROM {tableName} ORDER BY ID DESC";
-            //get the id of the most recent insert in the parent table
-            using (var command = new SqlCommand(inLineSqlGetID, conn))
-            {
-                var reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    idToReturn = (int)reader.GetValue(0);
-                }
-
-                reader.Close();
-            }
-
-            return idToReturn;
         }
 
         /// <summary>
@@ -262,16 +189,11 @@ namespace Week7_HW
                     conn.Open();
 
                     //Join the tables with an Inner Join
-                    string inLineSql = $@"SELECT {CharacterTable}.ID, {CharacterTable}.Character, " +
-                                            $@"{TypeTable}.Type, {MapTable}.Map_Location, " + 
-                                            $@"{InfoTable}.Original_Character, {InfoTable}.Sword_Fighter, {InfoTable}.Magic_User " + 
-                                       $@"FROM {CharacterTable} " + 
-                                       $@"INNER JOIN {TypeTable} ON {TypeTable}.ID = {CharacterTable}.TypeID " + 
-                                       $@"INNER JOIN {MapTable} ON {MapTable}.ID = {CharacterTable}.MapID " + 
-                                       $@"INNER JOIN {InfoTable} ON {InfoTable}.ID = {CharacterTable}.InfoID ";
+                    string inLineSql = $@"[dbo].[spGetFullCharReport]";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         //Read the joined table
                         var tableReader = command.ExecuteReader();
 
@@ -279,7 +201,7 @@ namespace Week7_HW
                         while (tableReader.Read())
                         {
                             //Write the row, checking to see if the value is null. If it is null, replace with "NULL" for the file
-                            var record = $"{tableReader.GetValue(0)}|{tableReader.GetValue(1)}|{tableReader.GetValue(2)}|{tableReader.GetValue(3)}|{tableReader.GetValue(4)}|{tableReader.GetValue(5)}|{tableReader.GetValue(6)}";
+                            var record = $"{CheckIfNull(tableReader.GetValue(0))}|{CheckIfNull(tableReader.GetValue(1))}|{CheckIfNull(tableReader.GetValue(2))}|{CheckIfNull(tableReader.GetValue(3))}|{CheckIfNull(tableReader.GetValue(4))}|{CheckIfNull(tableReader.GetValue(5))}|{CheckIfNull(tableReader.GetValue(6))}";
 
                             //Add to the list of records
                             records.Add(record);
@@ -312,6 +234,18 @@ namespace Week7_HW
             }
         }
 
+        public string CheckIfNull(object value)
+        {
+            if (value != DBNull.Value)
+            {
+                return value.ToString();
+            }
+            else
+            {
+                return "NULL";
+            }
+        }
+
         /// <summary>
         /// Find all the characters whose Map_Location field is NULL
         /// </summary>
@@ -328,14 +262,11 @@ namespace Week7_HW
                     conn.Open();
 
                     //Left join where all Map_Location values are null
-                    string inLineSql = $@"SELECT {CharacterTable}.ID, {CharacterTable}.Character " +
-                                       $@"FROM {CharacterTable} " +
-                                       $@"LEFT JOIN {MapTable} " +
-                                       $@"On {MapTable}.ID = {CharacterTable}.MapID " +
-                                       $@"WHERE {MapTable}.Map_Location is NULL";
+                    string inLineSql = $@"[dbo].[spGetCharNoMap]";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         var tableReader = command.ExecuteReader();
 
                         while (tableReader.Read())
@@ -386,14 +317,11 @@ namespace Week7_HW
                     conn.Open();
                     
                     //Inner join where Type != "Human" and where Sword_Fighter == "TRUE"
-                    string inLineSql = $@"SELECT {CharacterTable}.ID, {CharacterTable}.Character " +
-                                       $@"FROM {CharacterTable} " +
-                                       $@"INNER JOIN {TypeTable} ON {TypeTable}.ID = {CharacterTable}.TypeID " +
-                                       $@"INNER JOIN {InfoTable} ON {InfoTable}.ID = {CharacterTable}.InfoID " +
-                                       $@"WHERE {TypeTable}.Type != 'Human' and {InfoTable}.Sword_Fighter = 'TRUE'";
+                    string inLineSql = $@"spGetSwordNonHuman";
 
                     using (var command = new SqlCommand(inLineSql, conn))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         var tableReader = command.ExecuteReader();
 
                         while (tableReader.Read())
